@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Deliveries - Food Donation System</title>
+    <style>
+        body { font-family: Arial; margin: 30px; }
+        .nav { margin-bottom: 20px; }
+        .nav a { margin-right: 18px; font-weight: bold; color: #2e7d32; }
+        table { border-collapse: collapse; width: 100%; margin-top: 15px; }
+        th, td { border: 1px solid #999; padding: 8px; text-align: left; }
+        th { background: #2e7d32; color: white; }
+        .box { background: #f1f8e9; padding: 15px; margin-bottom: 15px; }
+        input, select { padding: 6px; margin: 4px; }
+        button { padding: 7px 14px; background: #2e7d32; color: white; border: none; }
+        .ok { background: #c8e6c9; padding: 10px; margin-bottom: 10px; }
+        .err { background: #ffcdd2; padding: 10px; margin-bottom: 10px; }
+        form.inline { display: inline; }
+    </style>
+</head>
+<body>
+    <div class="nav"><a href="/">Food</a><a href="/deliveries">Deliveries</a><span style="float:right">Logged in as <b>{{ username }}</b> ({{ role }}) <a href="/logout">Logout</a></span></div>
+    <h1>Deliveries</h1>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for cat, msg in messages %}
+        <div class="{{ cat }}">{{ msg }}</div>
+        {% endfor %}
+    {% endwith %}
+
+    <div class="box">
+        <h3>Create Delivery</h3>
+        <form method="POST" action="/deliveries/add">
+            <select name="food_id" required>
+                {% for f in foods %}
+                <option value="{{ f.food_id }}">{{ f.food_name }} (stock {{ f.quantity }})</option>
+                {% endfor %}
+            </select>
+            <select name="ngo_id" required>
+                {% for n in ngos %}
+                <option value="{{ n.ngo_id }}">{{ n.ngo_name }}</option>
+                {% endfor %}
+            </select>
+            <select name="beneficiary_id" required>
+                {% for b in bens %}
+                <option value="{{ b.beneficiary_id }}">{{ b.beneficiary_name }}</option>
+                {% endfor %}
+            </select>
+            <input type="number" name="quantity" placeholder="Quantity" min="1" required>
+            <button type="submit">Create Delivery</button>
+        </form>
+    </div>
+
+    <h2>Delivery List</h2>
+    <table>
+        <tr>
+            <th>ID</th><th>Food</th><th>NGO</th><th>Beneficiary</th>
+            <th>Date</th><th>Qty</th><th>Status</th><th>Action</th>
+        </tr>
+        {% for r in rows %}
+        <tr>
+            <td>{{ r.delivery_id }}</td>
+            <td>{{ r.food_name }}</td>
+            <td>{{ r.ngo_name }}</td>
+            <td>{{ r.beneficiary_name }}</td>
+            <td>{{ r.delivery_date }}</td>
+            <td>{{ r.quantity }}</td>
+            <td>{{ r.delivery_status }}</td>
+            <td>
+                {% if r.delivery_status != 'Delivered' and role == 'admin' %}
+                <form class="inline" method="POST" action="/deliveries/delivered/{{ r.delivery_id }}">
+                    <button type="submit">Mark Delivered</button>
+                </form>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

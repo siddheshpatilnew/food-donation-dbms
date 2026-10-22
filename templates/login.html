@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login - Food Donation System</title>
+    <style>
+        body { font-family: Arial; margin: 30px; }
+        .box { background: #f1f8e9; padding: 20px; width: 340px; }
+        input { padding: 7px; margin: 6px 0; width: 100%; box-sizing: border-box; }
+        button { padding: 8px 16px; background: #2e7d32; color: white; border: none; }
+        .err { background: #ffcdd2; padding: 10px; margin-bottom: 10px; }
+        small { color: #555; }
+    </style>
+</head>
+<body>
+    <h1>Food Donation System</h1>
+    <div class="box">
+        <h3>Login</h3>
+        {% if error %}<div class="err">{{ error }}</div>{% endif %}
+        <form method="POST">
+            Username
+            <input type="text" name="username" required>
+            Password
+            <input type="password" name="password" required>
+            <button type="submit">Login</button>
+        </form>
+        <p><small>Admin: admin / admin123<br>Normal user: user / user123</small></p>
+    </div>
+</body>
+</html>

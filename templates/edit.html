@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Food</title>
+    <style>
+        body { font-family: Arial; margin: 30px; }
+        .box { background: #f1f8e9; padding: 20px; width: 400px; }
+        input, select { padding: 6px; margin: 6px 0; width: 100%; }
+        button { padding: 7px 14px; background: #2e7d32; color: white; border: none; }
+        .nav { margin-bottom: 20px; }
+        .nav a { margin-right: 18px; font-weight: bold; color: #2e7d32; }
+        .ok { background: #c8e6c9; padding: 10px; margin-bottom: 10px; }
+        .err { background: #ffcdd2; padding: 10px; margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+    <div class="nav"><a href="/">Food</a><a href="/deliveries">Deliveries</a><span style="float:right">Logged in as <b>{{ username }}</b> ({{ role }}) <a href="/logout">Logout</a></span></div>
+    <h1>Edit Food #{{ food.food_id }}</h1>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for cat, msg in messages %}
+        <div class="{{ cat }}">{{ msg }}</div>
+        {% endfor %}
+    {% endwith %}
+    <div class="box">
+        <form method="POST">
+            Food name
+            <input type="text" name="food_name" value="{{ food.food_name }}" required>
+            Quantity
+            <input type="number" name="quantity" value="{{ food.quantity }}" min="0" required>
+            Food type
+            <input type="text" name="food_type" value="{{ food.food_type }}" required>
+            Expiry date
+            <input type="date" name="expiry_date" value="{{ food.expiry_date }}" min="{{ today }}" required>
+            Status
+            <select name="status">
+                {% for s in ["Available", "Collected", "Delivered"] %}
+                <option value="{{ s }}" {% if s == food.status %}selected{% endif %}>{{ s }}</option>
+                {% endfor %}
+            </select>
+            <button type="submit">Save</button>
+            <a href="/">Cancel</a>
+        </form>
+    </div>
+</body>
+</html>
